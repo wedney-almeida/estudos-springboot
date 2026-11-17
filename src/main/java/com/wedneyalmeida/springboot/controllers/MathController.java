@@ -19,6 +19,41 @@ public class MathController {
         return convertToDouble(numberOne) + convertToDouble(numberTwo);
     }
 
+    @RequestMapping("/sub/{numberOne}/{numberTwo}")
+    public Double sub(
+            @PathVariable("numberOne") String numberOne,
+            @PathVariable("numberTwo") String numberTwo
+    ) throws Exception {
+        if (!isNumeric(numberOne) || !isNumeric(numberTwo))
+                throw new UnsupportedMathOperationException("Please set a numeric value!");
+            return convertToDouble(numberOne) - convertToDouble(numberTwo);
+    }
+
+    @RequestMapping("/mul/{numberOne}/{numberTwo}")
+    public Double mul(
+            @PathVariable("numberOne") String numberOne,
+            @PathVariable("numberTwo") String numberTwo
+    ) throws Exception {
+        if(!isNumeric(numberOne) || !isNumeric(numberTwo))
+                throw new UnsupportedMathOperationException("Please set a numeric value!");
+            return convertToDouble(numberOne) * convertToDouble(numberTwo);
+    }
+
+    @RequestMapping("/div/{numberOne}/{numberTwo}")
+    public Double div(
+            @PathVariable("numberOne") String numberOne,
+            @PathVariable("numberTwo") String numberTwo
+    ) throws Exception {
+        if(!isNumeric(numberOne) || !isNumeric(numberTwo))
+                throw new UnsupportedMathOperationException("Please set a numeric value!");
+
+        Double divisor = convertToDouble(numberTwo);
+
+        if (divisor == 0)
+                throw new UnsupportedMathOperationException("Division by zero is not allowed!");
+            return convertToDouble(numberOne) / convertToDouble(numberTwo);
+    }
+
     private Double convertToDouble(String strNumber) throws IllegalArgumentException {
 
         if(strNumber == null || strNumber.isEmpty())
