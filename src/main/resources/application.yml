@@ -10,3 +10,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: false
+logging:
+  level:
+    # com.wedneyalmeida.springboot: debug
+    root: warn
