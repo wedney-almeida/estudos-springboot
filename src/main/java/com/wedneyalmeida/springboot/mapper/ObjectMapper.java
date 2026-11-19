@@ -2,6 +2,7 @@ package com.wedneyalmeida.springboot.mapper;
 
 import com.github.dozermapper.core.DozerBeanMapperBuilder;
 import com.github.dozermapper.core.Mapper;
+import tools.jackson.databind.ser.std.SimpleFilterProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,5 +22,9 @@ public class ObjectMapper {
             destinationObjects.add(mapper.map(o, destination));
         }
         return destinationObjects;
+    }
+
+    public void setFilterProvider(SimpleFilterProvider filters) {
+
     }
 }
