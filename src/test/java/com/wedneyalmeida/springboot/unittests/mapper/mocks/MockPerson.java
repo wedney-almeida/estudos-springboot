@@ -3,7 +3,7 @@ package com.wedneyalmeida.springboot.unittests.mapper.mocks;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.wedneyalmeida.springboot.data.dto.PersonDTO;
+import com.wedneyalmeida.springboot.data.dto.v1.PersonDTO;
 import com.wedneyalmeida.springboot.model.Person;
 
 public class MockPerson {

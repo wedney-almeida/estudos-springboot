@@ -1,6 +1,9 @@
 package com.wedneyalmeida.springboot.services;
 
+import com.wedneyalmeida.springboot.data.dto.v1.PersonDTO;
+import com.wedneyalmeida.springboot.data.dto.v2.PersonDTOV2;
 import com.wedneyalmeida.springboot.exception.ResourceNotFoundException;
+import com.wedneyalmeida.springboot.mapper.custom.PersonMapper;
 import com.wedneyalmeida.springboot.model.Person;
 import com.wedneyalmeida.springboot.repository.PersonRepository;
 import org.slf4j.Logger;
@@ -10,6 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static com.wedneyalmeida.springboot.mapper.ObjectMapper.parseListObjects;
+import static com.wedneyalmeida.springboot.mapper.ObjectMapper.parseObject;
 
 
 @Service
@@ -22,29 +28,42 @@ public class PersonServices {
     @Autowired
     PersonRepository repository;
 
-    public List<Person> findAll(){
+    @Autowired
+    PersonMapper converter;
+
+    public List<PersonDTO> findAll(){
 
         logger.info("Finding all People");
 
-        return repository.findAll();
+        return parseListObjects(repository.findAll(), PersonDTO.class);
     }
 
-    public Person findById(Long id){
+    public PersonDTO findById(Long id){
 
         logger.info("Finding one Person!");
 
-        return repository.findById(id)
+        var entity = repository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("No records found for this id"));
+        return parseObject(entity, PersonDTO.class);
     }
 
-    public Person create(Person person){
+    public PersonDTO create(PersonDTO person){
 
         logger.info("Creating one Person");
+        var entity = parseObject(person, Person.class);
 
-        return repository.save(person);
+        return parseObject(repository.save(entity), PersonDTO.class);
     }
 
-    public Person update(Person person){
+    public PersonDTOV2 createV2(PersonDTOV2 person){
+
+        logger.info("Creating one Person V2");
+        var entity = parseObject(person, Person.class);
+
+        return converter.convertEntityToDTO(repository.save(entity));
+    }
+
+    public PersonDTO update(PersonDTO person){
 
         logger.info("Updating one Person");
         Person entity = repository.findById(person.getId())
@@ -55,7 +74,7 @@ public class PersonServices {
         entity.setAddress(person.getAddress());
         entity.setGender(person.getGender());
 
-        return repository.save(person);
+        return parseObject(repository.save(entity), PersonDTO.class);
     }
 
     public void delete(Long id){
