@@ -1,8 +1,15 @@
 package com.wedneyalmeida.springboot.controllers;
 
+import com.wedneyalmeida.springboot.controllers.docs.PersonControllerDocs;
 import com.wedneyalmeida.springboot.data.dto.v1.PersonDTO;
 import com.wedneyalmeida.springboot.data.dto.v2.PersonDTOV2;
 import com.wedneyalmeida.springboot.services.PersonServices;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +20,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/person/v1")
-public class PersonController {
+@Tag(name = "People", description = "Enpoints for Managing People")
+public class PersonController implements PersonControllerDocs {
 
     @Autowired
     private PersonServices service;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @Override
     public List<PersonDTO> findByAll(){
         return service.findAll();
     }
@@ -26,6 +36,8 @@ public class PersonController {
     @GetMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+
+    @Override
     public PersonDTO findById(@PathVariable("id") Long id){
         var person = service.findById(id);
         person.setBirthDate(new Date());
@@ -38,6 +50,8 @@ public class PersonController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+
+    @Override
     public PersonDTO create(@RequestBody PersonDTO person){
         return service.create(person);
     }
@@ -46,6 +60,8 @@ public class PersonController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+
+    @Override
     public PersonDTOV2 create(@RequestBody PersonDTOV2 person){
         return service.createV2(person);
     }
@@ -54,12 +70,16 @@ public class PersonController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+
+    @Override
     public PersonDTO update(@RequestBody PersonDTO person){
 
         return service.update(person);
     }
 
     @DeleteMapping(value = "/{id}")
+
+    @Override
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
