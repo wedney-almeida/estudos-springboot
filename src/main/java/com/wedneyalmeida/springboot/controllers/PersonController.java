@@ -4,11 +4,7 @@ import com.wedneyalmeida.springboot.controllers.docs.PersonControllerDocs;
 import com.wedneyalmeida.springboot.data.dto.v1.PersonDTO;
 import com.wedneyalmeida.springboot.data.dto.v2.PersonDTOV2;
 import com.wedneyalmeida.springboot.services.PersonServices;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

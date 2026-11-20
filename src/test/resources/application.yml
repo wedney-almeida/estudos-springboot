@@ -1,1 +1,16 @@
-spring.application.name=estudos-springboot
+spring:
+  application:
+    name: estudos_springboot
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/estudos_springboot?useTimezone=true&serverTimezone=UTC
+    username: root
+    password: 123456
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+logging:
+  level:
+    # com.wedneyalmeida.springboot: debug
+    root: warn
