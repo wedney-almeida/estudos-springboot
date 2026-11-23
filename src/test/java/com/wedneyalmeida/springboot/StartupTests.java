@@ -1,10 +1,11 @@
 package com.wedneyalmeida.springboot;
 
+import com.wedneyalmeida.springboot.integrationtests.testscontainer.AbstractIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class StartupTests {
+class StartupTests extends AbstractIntegrationTest {
 
 	@Test
 	void contextLoads() {
