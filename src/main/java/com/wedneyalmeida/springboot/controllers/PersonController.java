@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api/person/v1")
 @Tag(name = "People", description = "Enpoints for Managing People")
@@ -33,6 +34,7 @@ public class PersonController implements PersonControllerDocs {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
 
+    //@CrossOrigin(origins = "http://localhost:8080")
     @Override
     public PersonDTO findById(@PathVariable("id") Long id){
         var person = service.findById(id);
@@ -41,7 +43,7 @@ public class PersonController implements PersonControllerDocs {
         person.setSensitiveData("Foo Bar");
         return person;
     }
-
+    //@CrossOrigin(origins = "http://localhost:8080")
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
