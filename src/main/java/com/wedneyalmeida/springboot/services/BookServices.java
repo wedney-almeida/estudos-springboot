@@ -10,6 +10,8 @@ import com.wedneyalmeida.springboot.repository.BookRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,11 +30,18 @@ public class BookServices {
     @Autowired
     BookRepository repository;
 
-    public List<BookDTO> findAll(){
+    public Page<BookDTO> findAll(Pageable pageable){
 
-        logger.info("Finding all People");
+        logger.info("Finding all Books");
 
-        return parseListObjects(repository.findAll(), BookDTO.class);
+        var books = repository.findAll(pageable);
+
+        var booksDTO = books.map(book -> {
+            var dto = parseObject(book, BookDTO.class);
+            return dto;
+        });
+
+        return booksDTO;
     }
 
     public BookDTO findById(Long id){
