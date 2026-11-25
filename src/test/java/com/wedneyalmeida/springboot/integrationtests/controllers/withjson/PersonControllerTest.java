@@ -3,8 +3,11 @@ package com.wedneyalmeida.springboot.integrationtests.controllers.withjson;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.wedneyalmeida.springboot.config.TestConfigs;
 import com.wedneyalmeida.springboot.data.dto.v1.PersonDTO;
+import com.wedneyalmeida.springboot.integrationtests.testscontainer.AbstractIntegrationTest;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.ResponseLoggingFilter;
@@ -13,12 +16,13 @@ import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
+
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class PersonControllerTest {
+class PersonControllerTest extends AbstractIntegrationTest {
 
     private static RequestSpecification specification;
     private  static ObjectMapper objectMapper;
@@ -28,7 +32,11 @@ class PersonControllerTest {
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
-        objectMapper.disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES);
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+        SimpleFilterProvider filters = new SimpleFilterProvider()
+                .addFilter("PersonFilter", SimpleBeanPropertyFilter.serializeAllExcept("sensitiveData"));
+        objectMapper.setFilterProvider(filters);
 
         person = new PersonDTO();
     }
@@ -56,7 +64,7 @@ class PersonControllerTest {
 
         var content = given(specification)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(person)
+                .body(objectMapper.writeValueAsString(person))
                 .when()
                 .post()
                 .then()
@@ -78,8 +86,8 @@ class PersonControllerTest {
 
         assertEquals("Ricar", createdPerson.getFirstName());
         assertEquals("Lutia", createdPerson.getLastName());
-        assertEquals("falabal", createdPerson.getAddress());
-        assertEquals("Male", createdPerson.getGender());
+        assertEquals("falabala", createdPerson.getAddress());
+        assertEquals("M", createdPerson.getGender());
     }
         private void mockPerson () {
             person.setFirstName("Ricar");
