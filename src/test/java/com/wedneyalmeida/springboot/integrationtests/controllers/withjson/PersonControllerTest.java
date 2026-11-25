@@ -89,6 +89,7 @@ class PersonControllerTest extends AbstractIntegrationTest {
         assertEquals("falabala", createdPerson.getAddress());
         assertEquals("M", createdPerson.getGender());
     }
+
         private void mockPerson () {
             person.setFirstName("Ricar");
             person.setLastName("Lutia");

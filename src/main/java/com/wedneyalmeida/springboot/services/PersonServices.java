@@ -6,6 +6,7 @@ import com.wedneyalmeida.springboot.exception.ResourceNotFoundException;
 import com.wedneyalmeida.springboot.mapper.custom.PersonMapper;
 import com.wedneyalmeida.springboot.model.Person;
 import com.wedneyalmeida.springboot.repository.PersonRepository;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +76,20 @@ public class PersonServices {
         entity.setGender(person.getGender());
 
         return parseObject(repository.save(entity), PersonDTO.class);
+    }
+
+    @Transactional
+    public PersonDTO disablePerson(Long id){
+
+        logger.info("Disable one Person!");
+
+        repository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("No records found for this id"));
+        repository.disablePerson(id);
+
+        var entity = repository.findById(id).get();
+        var dto = parseObject(entity, PersonDTO.class);
+        return dto;
     }
 
     public void delete(Long id){
