@@ -3,16 +3,19 @@ package com.wedneyalmeida.springboot.controllers;
 import com.wedneyalmeida.springboot.controllers.docs.PersonControllerDocs;
 import com.wedneyalmeida.springboot.data.dto.v1.PersonDTO;
 import com.wedneyalmeida.springboot.data.dto.v2.PersonDTOV2;
+import com.wedneyalmeida.springboot.model.Person;
 import com.wedneyalmeida.springboot.services.PersonServices;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.List;
 
 
 @RestController
@@ -26,8 +29,12 @@ public class PersonController implements PersonControllerDocs {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 
     @Override
-    public List<PersonDTO> findByAll(){
-        return service.findAll();
+    public ResponseEntity<Page<PersonDTO>> findByAll(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "12") Integer size
+    ){
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(service.findAll(pageable));
     }
 
     @GetMapping(value = "/{id}",

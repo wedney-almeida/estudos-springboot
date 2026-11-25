@@ -10,9 +10,10 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.wedneyalmeida.springboot.mapper.ObjectMapper.parseListObjects;
@@ -32,11 +33,18 @@ public class PersonServices {
     @Autowired
     PersonMapper converter;
 
-    public List<PersonDTO> findAll(){
+    public Page<PersonDTO> findAll(Pageable pageable){
 
         logger.info("Finding all People");
 
-        return parseListObjects(repository.findAll(), PersonDTO.class);
+        var people = repository.findAll(pageable);
+
+        var peopleWithLinks = people.map(person -> {
+            var dto = parseObject(person, PersonDTO.class);
+            return dto;
+        });
+
+        return peopleWithLinks;
     }
 
     public PersonDTO findById(Long id){
